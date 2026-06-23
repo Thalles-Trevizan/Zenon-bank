@@ -1,10 +1,12 @@
 package br.com.zenon;
 
-import br.com.zenon.Enums.TransactionType;
-import br.com.zenon.Records.Transaction;
-import br.com.zenon.Records.TransactionCustomer;
+import br.com.zenon.enums.TransactionType;
+import br.com.zenon.records.Transaction;
+import br.com.zenon.records.TransactionCustomer;
+import br.com.zenon.services.TransactionIngestor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Main {
 
@@ -39,5 +41,11 @@ public class Main {
 
         System.out.println(t1);
         System.out.println(t2);
+
+        System.out.println("===============================================");
+
+        TransactionIngestor ingestor = new TransactionIngestor();
+        List<Transaction> transactions = ingestor.read("data/PS_20174392719_1491204439457_log.csv");
+        transactions.stream().limit(10).forEach(System.out::println);
     }
 }
