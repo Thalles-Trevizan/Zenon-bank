@@ -66,5 +66,12 @@ build/
 ### Mac OS ###
 .DS_Store
 
-data/
+### Gradle ###
+.gradle/
+out/
 
+.idea/workspace.xml
+.idea/shelf/
+
+### Data ###
+data/
