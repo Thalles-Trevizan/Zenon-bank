@@ -1,4 +1,4 @@
-package br.com.zenon.Records;
+package br.com.zenon.records;
 
 import java.math.BigDecimal;
 

@@ -1,6 +1,6 @@
-package br.com.zenon.Records;
+package br.com.zenon.records;
 
-import br.com.zenon.Enums.TransactionType;
+import br.com.zenon.enums.TransactionType;
 
 import java.math.BigDecimal;
 

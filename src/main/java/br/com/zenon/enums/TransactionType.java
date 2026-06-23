@@ -1,4 +1,4 @@
-package br.com.zenon.Enums;
+package br.com.zenon.enums;
 
 public enum TransactionType {
     CASH_IN,
