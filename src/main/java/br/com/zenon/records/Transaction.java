@@ -8,8 +8,9 @@ public record Transaction(
         int step,
         TransactionType type,
         BigDecimal amount,
-        TransactionCustomer origin,
-        TransactionCustomer recipient,
+        br.com.zenon.records.TransactionCustomer origin,
+        br.com.zenon.records.TransactionCustomer recipient,
         boolean isFraud,
-        boolean isFlaggedFraud) {
+        boolean isFlaggedFraud
+) {
 }
