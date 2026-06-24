@@ -11,6 +11,5 @@ public record Transaction(
         TransactionCustomer origin,
         TransactionCustomer recipient,
         boolean isFraud,
-        boolean isFlaggedFraud
-) {
+        boolean isFlaggedFraud) {
 }
