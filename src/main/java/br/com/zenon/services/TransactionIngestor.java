@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 public class TransactionIngestor {
 
-    public List<Transaction> read(String fileName){
+    public List<Transaction> read(String fileName) {
         Path path = Path.of(fileName);
 
         try {
@@ -21,6 +22,8 @@ public class TransactionIngestor {
                     .skip(1)
                     .limit(1000)
                     .map(this::parseTransactional)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .toList();
 
         } catch (IOException e) {
@@ -28,30 +31,39 @@ public class TransactionIngestor {
         }
     }
 
-    private Transaction parseTransactional(String line) {
-        String[] chunks = line.split(",");
+    private Optional<Transaction> parseTransactional(String line) {
 
-        //Transactional commons
-        int step = Integer.parseInt(chunks[0]);
-        TransactionType type = TransactionType.valueOf(chunks[1]);
-        BigDecimal amount = new BigDecimal(chunks[2]);
+        try {
+            String[] chunks = line.split(",");
 
-        boolean isFraud = "1".equals(chunks[9]);
-        boolean isFlaggedFraud = "1".equals(chunks[10]);
+            //Transactional commons
+            int step = Integer.parseInt(chunks[0]);
+            TransactionType type = TransactionType.valueOf(chunks[1]);
 
-        //Transactional Origin
-        String nameOrigin = chunks[3];
-        BigDecimal oldBalance = new BigDecimal(chunks[4]);
-        BigDecimal newBalance = new BigDecimal(chunks[5]);
+            BigDecimal amount = new BigDecimal(chunks[2]);
 
-        //Transactional Recipient
-        String nameRecipient = chunks[6];
-        BigDecimal oldBalanceRecipient = new BigDecimal(chunks[7]);
-        BigDecimal newBalanceRecipient = new BigDecimal(chunks[8]);
+            boolean isFraud = "1".equals(chunks[9]);
+            boolean isFlaggedFraud = "1".equals(chunks[10]);
 
-        TransactionCustomer origin = new TransactionCustomer(nameOrigin, oldBalance, newBalance);
-        TransactionCustomer recipient = new TransactionCustomer(nameRecipient, oldBalanceRecipient, newBalanceRecipient);
+            //Transactional Origin
+            String nameOrigin = chunks[3];
+            BigDecimal oldBalance = new BigDecimal(chunks[4]);
+            BigDecimal newBalance = new BigDecimal(chunks[5]);
 
-        return new Transaction(step, type, amount, origin, recipient, isFraud, isFlaggedFraud);
+            //Transactional Recipient
+            String nameRecipient = chunks[6];
+            BigDecimal oldBalanceRecipient = new BigDecimal(chunks[7]);
+            BigDecimal newBalanceRecipient = new BigDecimal(chunks[8]);
+
+            TransactionCustomer origin = new TransactionCustomer(nameOrigin, oldBalance, newBalance);
+            TransactionCustomer recipient = new TransactionCustomer(nameRecipient, oldBalanceRecipient, newBalanceRecipient);
+
+            return Optional.of(new Transaction(step, type, amount, origin, recipient, isFraud, isFlaggedFraud));
+
+        } catch (Exception e) {
+            System.out.println("Erro ao fazer parse: " + line + " | " + e.getMessage());
+        }
+
+        return Optional.empty();
     }
 }
