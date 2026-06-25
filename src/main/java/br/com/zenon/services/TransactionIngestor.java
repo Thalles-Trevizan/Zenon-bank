@@ -13,14 +13,14 @@ import java.util.Optional;
 
 public class TransactionIngestor {
 
-    public List<Transaction> read(String fileName) {
+    public List<Transaction> read(String fileName, int limit) {
         Path path = Path.of(fileName);
 
         try {
             List<String> lines = Files.readAllLines(path);
             return lines.stream()
                     .skip(1)
-                    .limit(1000)
+                    .limit(limit)
                     .map(this::parseTransactional)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
