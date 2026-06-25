@@ -3,6 +3,7 @@ package br.com.zenon;
 import br.com.zenon.enums.TransactionType;
 import br.com.zenon.records.Transaction;
 import br.com.zenon.records.TransactionCustomer;
+import br.com.zenon.services.FraudAnalyzer;
 import br.com.zenon.services.TransactionIngestor;
 
 import java.math.BigDecimal;
@@ -45,17 +46,28 @@ public class Main {
         System.out.println("===============================================");
 
         TransactionIngestor ingestor = new TransactionIngestor();
-        List<Transaction> transactions = ingestor.read("data/PS_20174392719_1491204439457_log.csv");
+        List<Transaction> transactionsBadData = ingestor.read("data/paysim_with_bad_data.csv", 20);
+
+        System.out.println(transactionsBadData.size());
+        transactionsBadData
+                .forEach(System.out::println);
+
+        System.out.println("===============================================");
+
+        List<Transaction> transactions = ingestor.read("data/PS_20174392719_1491204439457_log.csv", 1_000);
         transactions.stream()
                 .limit(10)
                 .forEach(System.out::println);
 
         System.out.println("===============================================");
 
-        List<Transaction> transactionsBadData = ingestor.read("data/paysim_with_bad_data.csv");
+        List<Transaction> transactionsForProcessing = ingestor.read("data/PS_20174392719_1491204439457_log.csv", 50_000);
+        FraudAnalyzer fraudAnalyzer = new FraudAnalyzer(transactionsForProcessing);
 
-        System.out.println(transactionsBadData.size());
-        transactionsBadData
-                .forEach(System.out::println);
+        fraudAnalyzer.countFrauds();
+        fraudAnalyzer.findHighestValueFrauds(3);
+        fraudAnalyzer.findTopSuspiciousClients(5);
+        fraudAnalyzer.calculateTotalFraudLoss();
+        fraudAnalyzer.countFraudsByType();
     }
 }
