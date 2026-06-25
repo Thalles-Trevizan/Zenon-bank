@@ -3,11 +3,11 @@ package br.com.zenon;
 import br.com.zenon.enums.TransactionType;
 import br.com.zenon.records.Transaction;
 import br.com.zenon.records.TransactionCustomer;
-import br.com.zenon.services.FraudAnalyzer;
-import br.com.zenon.services.TransactionIngestor;
+import br.com.zenon.services.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
 
@@ -69,5 +69,25 @@ public class Main {
         fraudAnalyzer.findTopSuspiciousClients(5);
         fraudAnalyzer.calculateTotalFraudLoss();
         fraudAnalyzer.countFraudsByType();
+
+        System.out.println("===============================================");
+
+        List<Transaction> transaction100 = ingestor.read("data/PS_20174392719_1491204439457_log.csv", 100_000);
+        TransactionRepository transactionBenchmark = new TransactionListRepository(transaction100);
+
+        long startTimeList = System.currentTimeMillis();
+        Optional<Transaction> c1231006815 = transactionBenchmark.findByOriginName("C1231006815");
+        Optional<Transaction> c12345 = transactionBenchmark.findByOriginName("C12345");
+        long endTimeList = System.currentTimeMillis();
+        System.out.println("Total execution time for List: " + (endTimeList - startTimeList));
+
+        //Map para uma busca de 100k já começa a ser bem mais rapido
+        transactionBenchmark = new TransactionMapRepository(transaction100);
+        long startTimeMap = System.currentTimeMillis();
+        Optional<Transaction> c1 = transactionBenchmark.findByOriginName("C1231006815");
+        Optional<Transaction> c2 = transactionBenchmark.findByOriginName("C12345");
+        long endTimeMap = System.currentTimeMillis();
+        System.out.println("Total execution time for Map: " + (endTimeMap - startTimeMap));
+
     }
 }
