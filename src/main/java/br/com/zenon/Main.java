@@ -1,6 +1,7 @@
 package br.com.zenon;
 
 import br.com.zenon.enums.TransactionType;
+import br.com.zenon.interfaces.TransactionRepository;
 import br.com.zenon.records.Transaction;
 import br.com.zenon.records.TransactionCustomer;
 import br.com.zenon.services.*;
@@ -88,6 +89,5 @@ public class Main {
         Optional<Transaction> c2 = transactionBenchmark.findByOriginName("C12345");
         long endTimeMap = System.currentTimeMillis();
         System.out.println("Total execution time for Map: " + (endTimeMap - startTimeMap));
-
     }
 }

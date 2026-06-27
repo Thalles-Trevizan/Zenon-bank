@@ -1,4 +1,4 @@
-package br.com.zenon.services;
+package br.com.zenon.interfaces;
 
 import br.com.zenon.records.Transaction;
 
