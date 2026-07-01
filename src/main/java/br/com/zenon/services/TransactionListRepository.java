@@ -1,5 +1,6 @@
 package br.com.zenon.services;
 
+import br.com.zenon.interfaces.TransactionRepository;
 import br.com.zenon.records.Transaction;
 
 import java.util.List;
